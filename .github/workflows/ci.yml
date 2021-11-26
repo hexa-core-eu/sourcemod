@@ -1,8 +1,11 @@
 name: Continuous Integration
 on: 
   push:
-    tags:
-    - 'v*'
+    branches:
+     - master
+  pull_request:
+    branches:
+     - master
 jobs:
   test:
     strategy:
@@ -91,13 +94,3 @@ jobs:
           cd build
           python ../configure.py --enable-optimize --sdks=${{ join(fromJSON(env.SDKS)) }} --targets=${{ env.ARCH }} --mms-path=${{ env.DEPENDENCIES_ROOT }}/mmsource-${{ env.MMSOURCE_VERSION }} --hl2sdk-root=${{ env.DEPENDENCIES_ROOT }} --mysql-path=${{ env.DEPENDENCIES_ROOT }}/mysql-${{ env.MYSQL_VERSION }} --mysql64-path=${{ env.DEPENDENCIES_ROOT }}/mysql-${{ env.MYSQL_VERSION }}-x86_64
           ambuild
-      - name: Zip Release
-        working-directory: sourcemod
-        run: 'zip -r build.zip build'     
-      - name: Release
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ${{ github.workspace }}/sourcemod/build.zip
-          asset_name: ${{ matrix.asset_name }}.zip
-          tag: ${{ github.ref }}  
