@@ -20,10 +20,6 @@ jobs:
             os_short: linux
             compiler_cc: clang
             compiler_cxx: clang++
-          - os: ubuntu-18.04
-            os_short: linux
-            compiler_cc: clang-8
-            compiler_cxx: clang++-8
       fail-fast: false
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.os_short }}-${{ matrix.compiler_cc }}
@@ -89,7 +85,7 @@ jobs:
           ${{ matrix.compiler_cxx }} --version
 
       - name: Build
-        working-directory: sourcemod
+        shell: bash
         run: |
           mkdir build
           cd build
@@ -100,5 +96,5 @@ jobs:
       - name: Archive tooling
         uses: actions/upload-artifact@v2
         with:
-          name: sourcemod-${{ env.SM_VERSION }}-${{ matrix.os_short }}
+          name: sourcemod-${{ env.SM_VERSION }}-${{ matrix.os_short }}-${{ matrix.compiler_cc }}
           path: build/package
